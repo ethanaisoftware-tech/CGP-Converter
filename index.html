@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA to Percentage Converter - AdSense Ready</title>
+    
+    <link rel="stylesheet" href="styles.css"> 
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">
+                <i class="fas fa-microchip logo-icon"></i> <strong>CGPA Converter</strong>
+            </a>
+        </div>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">T&C</a>
+            <a href="about.html">About Us</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <div class="main-card">
+            <h1 class="card-title">Convert CGPA to Percentage</h1>
+
+            <div class="input-field-group">
+                <label for="university">Select University/Scale:</label>
+                <select id="university" class="select-field" required>
+                    <option value="pu">University of the Punjab (PU) - HEC 4.0 Scale</option>
+                    <option value="cbse">CBSE / Standard 10-Point Scale (x 9.5)</option>
+                    <option value="vtu">VTU / Anna University (CGPA - 0.75) x 10</option>
+                    <option value="lums">LUMS / NUST / COMSATS (Specific Formula)</option>
+                    <option value="uk4">UK Standard (4.0 Scale, x 25)</option>
+                </select>
+            </div>
+            
+            <div class="input-field-group">
+                <label for="cgpa">Enter your CGPA:</label>
+                <input type="number" step="0.01" id="cgpa" class="input-field" placeholder="e.g., 3.5" required>
+            </div>
+
+            <button id="convertBtn" class="button-convert">Convert to Percentage</button>
+
+            <div id="result" class="result-message" style="display: none;">
+                </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 CGPA Converter | All Rights Reserved
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const convertBtn = document.getElementById("convertBtn");
+            const cgpaInput = document.getElementById("cgpa");
+            const uniSelect  = document.getElementById("university");
+            const resultDiv  = document.getElementById("result");
+
+            convertBtn.addEventListener("click", function() {
+                const cgpa = parseFloat(cgpaInput.value);
+                const uni  = uniSelect.value;
+
+                resultDiv.classList.remove("show");
+                resultDiv.style.display = "flex";
+                resultDiv.style.removeProperty('background');
+                resultDiv.style.removeProperty('color');
+
+                // --- 1. Validation ---
+                if (isNaN(cgpa) || cgpa < 0 || cgpa > 10.0) {
+                    resultDiv.style.setProperty('background', 'rgba(255, 0, 0, 0.15)', 'important');
+                    resultDiv.style.setProperty('color', '#ff8888', 'important');
+                    resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter a valid CGPA (0.00 to 10.00).';
+                    return;
+                }
+                
+                // --- 2. Conversion Logic ---
+                let percentage;
+                switch (uni) {
+                    case "pu": case "uk4": percentage = cgpa * 25; break;
+                    case "cbse": percentage = cgpa * 9.5; break;
+                    case "vtu": percentage = (cgpa * 10) - 7.5; break;
+                    case "lums": percentage = (cgpa / 4.0) * 100; break;
+                    default: percentage = cgpa * 9.5;
+                }
+
+                if (percentage < 0) percentage = 0;
+                if (percentage > 100) percentage = 100;
+
+                // --- 3. Animate the result display ---
+                animateResult(resultDiv, percentage);
+            });
+
+            // Function to handle the animated counting effect
+            function animateResult(element, finalValue) {
+                let current = 0;
+                const duration = 1200; 
+                const frameRate = 16;  
+                const totalFrames = duration / frameRate;
+                const step = finalValue / totalFrames; 
+
+                // Apply success styles for the visual effect
+                element.style.setProperty('background', 'rgba(0, 255, 0, 0.15)', 'important');
+                element.style.setProperty('color', '#a3ffc6', 'important');
+                
+                element.innerHTML = '<i class="fas fa-check-circle"></i> Your Percentage is <strong>0.00%</strong>';
+                void element.offsetWidth; 
+                element.classList.add("show"); // Triggers CSS fade-in/scale-up animation
+
+                const counter = setInterval(() => {
+                    current += step;
+                    if (current >= finalValue) {
+                        current = finalValue;
+                        clearInterval(counter); 
+                    }
+                    element.innerHTML = `<i class="fas fa-check-circle"></i> Your Percentage is <strong>${current.toFixed(2)}%</strong>`;
+                }, frameRate);
+            }
+        });
+    </script>
+</body>
+</html>

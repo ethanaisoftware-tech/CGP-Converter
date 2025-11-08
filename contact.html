@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - AI Powered Support</title>
+    
+    <link rel="stylesheet" href="styles.css"> 
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">
+                <i class="fas fa-microchip logo-icon"></i> <strong>CGPA Converter</strong>
+            </a>
+        </div>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">T&C</a>
+            <a href="about.html">About Us</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <div class="main-card contact-card">
+            <h1 class="card-title">Get in Touch <i class="far fa-envelope"></i></h1>
+
+            <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                
+                <div class="input-field-group">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" class="input-field" placeholder="John Doe" required>
+                </div>
+                
+                <div class="input-field-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" class="input-field" placeholder="you@example.com" required>
+                </div>
+
+                <div class="input-field-group">
+                    <label for="subject">Inquiry Subject:</label>
+                    <select id="subject" class="input-field" required>
+                        <option value="" disabled selected>Select a Reason</option>
+                        <option value="support">Technical Support</option>
+                        <option value="sales">Sales & Pricing Inquiry</option>
+                        <option value="feedback">General Feedback</option>
+                        <option value="other">Other Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="input-field-group">
+                    <label for="message">Your Message:</label>
+                    <textarea id="message" class="input-field" rows="4" placeholder="How can we help you?" required></textarea>
+                </div>
+
+                <input type="hidden" id="aiSummary" value=""> 
+
+                <button type="submit" id="submitBtn" class="button-convert">Send Message</button>
+
+                <div id="contactResult" class="result-message" style="display: none;">
+                    </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 AI Integration Demo | All inquiries processed by AI
+    </footer>
+
+    <script>
+        // *** IMPORTANT: This entire JavaScript function handles the form logic ***
+        async function handleContactSubmit(event) {
+            event.preventDefault(); 
+
+            const form = document.getElementById('contactForm');
+            const resultDiv = document.getElementById('contactResult');
+            const submitBtn = document.getElementById('submitBtn');
+
+            const formData = {
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // 1. Initial UI Feedback
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing with AI...';
+            
+            resultDiv.classList.remove('show');
+            resultDiv.style.display = 'none';
+
+            // --- AI Integration Logic Placeholder ---
+            try {
+                // Simulate a 2-second AI processing time
+                await new Promise(resolve => setTimeout(resolve, 2000)); 
+                
+                const aiCategory = (formData.message.length > 50) ? 'Deep Inquiry' : 'Simple Message';
+                document.getElementById('aiSummary').value = aiCategory; 
+                
+                // 2. Success Feedback
+                resultDiv.style.setProperty('background', 'rgba(0, 255, 0, 0.15)', 'important');
+                resultDiv.style.setProperty('color', '#a3ffc6', 'important');
+                resultDiv.innerHTML = `<i class="fas fa-check-circle"></i> Success! Your ${aiCategory} has been submitted.`;
+                
+                form.reset(); 
+
+            } catch (error) {
+                // 3. Error Feedback
+                console.error('Submission Error:', error);
+                resultDiv.style.setProperty('background', 'rgba(255, 0, 0, 0.15)', 'important');
+                resultDiv.style.setProperty('color', '#ff8888', 'important');
+                resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Submission Failed. Please try again.';
+            } finally {
+                // 4. Final UI State
+                resultDiv.style.display = 'flex';
+                resultDiv.classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Send Message';
+            }
+        }
+    </script>
+</body>
+</html>
